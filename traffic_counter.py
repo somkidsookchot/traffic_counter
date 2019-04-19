@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 import pandas as pd
 
-cap = cv2.VideoCapture('traffic.mp4')
+cap = cv2.VideoCapture('input/video.mp4')
 frames_count, fps, width, height = cap.get(cv2.CAP_PROP_FRAME_COUNT), cap.get(cv2.CAP_PROP_FPS), cap.get(
     cv2.CAP_PROP_FRAME_WIDTH), cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
 width = int(width)
@@ -27,7 +27,7 @@ ret, frame = cap.read()  # import image
 ratio = .5  # resize ratio
 image = cv2.resize(frame, (0, 0), None, ratio, ratio)  # resize image
 width2, height2, channels = image.shape
-video = cv2.VideoWriter('traffic_counter.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), fps, (height2, width2), 1)
+video = cv2.VideoWriter('output/traffic_counter.avi', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), fps, (height2, width2), 1)
 
 while True:
 
@@ -50,7 +50,7 @@ while True:
         retvalbin, bins = cv2.threshold(dilation, 220, 255, cv2.THRESH_BINARY)  # removes the shadows
 
         # creates contours
-        im2, contours, hierarchy = cv2.findContours(bins, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        contours, hierarchy = cv2.findContours(bins, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
         # use convex hull to create polygon around contours
         hull = [cv2.convexHull(c) for c in contours]
@@ -328,4 +328,4 @@ cap.release()
 cv2.destroyAllWindows()
 
 # saves dataframe to csv file for later analysis
-df.to_csv('traffic.csv', sep=',')
+df.to_csv('output/traffic.csv', sep=',')
